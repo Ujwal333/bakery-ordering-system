@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Tracking - Cinnamon Bakery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #D4A76A;
+            --secondary: #7B3F00;
+            --light: #FFF8F0;
+            --dark: #1E1E1E;
+            --accent: #FF9F1C;
+            --accent2: #f7c873;
+            --text: #333333;
+            --card: #f9ede5;
+            --gradient: linear-gradient(90deg, #fff8f0 0%, #ffe5d0 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--gradient);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles - Matches home.html */
+        header {
+            background: linear-gradient(90deg, #fff8f0 60%, #ffe5d0 100%);
+            box-shadow: 0 2px 10px rgba(231, 176, 122, 0.13);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 16px;
+            position: relative;
+            transition: all 0.3s ease;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover,
+        nav ul li a.active {
+            background: var(--accent2);
+            color: var(--dark);
+        }
+        nav ul li a:hover:after,
+        nav ul li a.active:after {
+            width: 100%;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--card);
+            border-radius: 30px;
+            padding: 8px 15px;
+            box-shadow: 0 2px 8px rgba(231, 176, 122, 0.08);
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 180px;
+            font-size: 14px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent);
+        }
+
+        .cart-icon {
+            position: relative;
+            font-size: 20px;
+            color: var(--dark);
+            background: var(--card);
+            border-radius: 50%;
+            padding: 8px;
+            transition: background 0.2s;
+        }
+        .cart-icon:hover {
+            background: var(--accent2);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--accent);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(231, 176, 122, 0.12);
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Order Tracking Section */
+        .tracking-section {
+            padding: 80px 0;
+            min-height: 70vh;
+            background: var(--light);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: var(--text);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tracking-container {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .tracking-form {
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 18px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0d6c9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f9f3e9;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(212, 168, 106, 0.2);
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent);
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(255, 159, 28, 0.10);
+            margin-right: 10px;
+        }
+        .btn:hover {
+            background-color: var(--secondary);
+            color: #fff;
+            transform: translateY(-3px) scale(1.04);
+            box-shadow: 0 5px 15px rgba(123, 63, 0, 0.13);
+        }
+
+        .progress-container {
+            margin-top: 40px;
+            border-top: 1px solid #f0e6dc;
+            padding-top: 40px;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: #f0e6dc;
+            z-index: 1;
+            transform: translateY(-50%);
+            border-radius: 10px;
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 6px;
+            background: var(--primary);
+            z-index: 2;
+            transform: translateY(-50%);
+            width: 66%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .step {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            width: 100px;
+        }
+
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid #f0e6dc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.3rem;
+            color: #aaa;
+            transition: all 0.4s ease;
+        }
+
+        .step.active .step-icon {
+            border-color: var(--primary);
+            background: #f9f3e9;
+            color: var(--secondary);
+            transform: scale(1.1);
+        }
+
+        .step.completed .step-icon {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        .step-label {
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        .order-details {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f9f3e9;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .order-details h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+
+        .order-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+        }
+
+        .info-item label {
+            display: block;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .info-item p {
+            color: var(--text);
+        }
+
+        /* Footer - Matches home.html */
+        footer {
+            background: linear-gradient(90deg, #7B3F00 60%, #e7b07a 100%);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-col h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #e0d7d5;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            color: #e0d7d5;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            nav ul {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+            
+            nav {
+                order: 3;
+                width: 100%;
+                margin-top: 15px;
+                display: none;
+            }
+            
+            nav.active {
+                display: block;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+            
+            .section-title h2 {
+                font-size: 28px;
+            }
+            
+            .tracking-container {
+                padding: 30px 20px;
+            }
+            
+            .progress-steps {
+                flex-direction: column;
+                align-items: center;
+                gap: 40px;
+            }
+            
+            .progress-steps::before {
+                width: 6px;
+                height: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .progress-bar {
+                width: 6px;
+                height: 66%;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .header-actions {
+                gap: 10px;
+            }
+            
+            .search-bar input {
+                width: 120px;
+            }
+            
+            .tracking-section {
+                padding: 50px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header - Matches home.html -->
+    <header>
+        <div class="container header-container">
+            <nav id="main-nav">
+                <ul>
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="browse-menu.html">Browse Menu</a></li>
+                    <li><a href="custom-cake.html" id="customCakesNav">Custom Cakes</a></li>
+                    <li><a href="order-tracking.html" class="active">Order Tracking</a></li>
+                    <li><a href="about.html">About / Events</a></li>
+                    <li><a href="features.html">Features</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="profile" id="profile-login-link" style="cursor:pointer;">
+                    <a href="login.html" style="display:inline-block;"><img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="profile-img"></a>
+                </div>
+                <a href="#" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">3</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Order Tracking Section -->
+    <section class="tracking-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Track Your Order</h2>
+                <p>Enter your order ID to see the status of your delivery</p>
+            </div>
+            
+            <div class="tracking-container">
+                <div class="tracking-form">
+                    <div class="form-group">
+                        <label for="order-id">Order ID</label>
+                        <input type="text" id="order-id" placeholder="e.g. CB-2458">
+                    </div>
+                    <button class="btn" id="track-btn">Track Order</button>
+                </div>
+                
+                <div class="progress-container" id="progress-container">
+                    <div class="progress-steps">
+                        <div class="progress-bar"></div>
+                        
+                        <div class="step completed">
+                            <div class="step-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="step-label">Order Confirmed</div>
+                        </div>
+                        
+                        <div class="step active">
+                            <div class="step-icon">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div class="step-label">Preparing</div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-icon">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div class="step-label">Out for Delivery</div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-details">
+                        <h3>Order Details</h3>
+                        <div class="order-info">
+                            <div class="info-item">
+                                <label>Order ID</label>
+                                <p>CB-2458</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Order Date</label>
+                                <p>August 11, 2023</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Customer</label>
+                                <p>Priya Sharma</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Estimated Delivery</label>
+                                <p>Today by 3:00 PM</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Items</label>
+                                <p>Chocolate Cake (1), Cupcakes (6)</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Total Amount</label>
+                                <p>Rs 1,250</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer - Matches home.html -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Cinnamon Bakery</h3>
+                    <p>Artisan bakery crafting delicious treats since 2010. Quality ingredients, traditional methods, modern flavors.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="home.html">Home</a></li>
+                        <li><a href="browse-menu.html">Browse Menu</a></li>
+                        <li><a href="custom-cake.html">Custom Cakes</a></li>
+                        <li><a href="#">Order Tracking</a></li>
+                        <li><a href="about.html">About / Events</a></li>
+                        <li><a href="#">Features</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Sano Bharayang, Kathmandu, Nepal</li>
+                        <li><i class="fas fa-phone"></i> +977 9769349551</li>
+                        <li><i class="fas fa-envelope"></i> cinnamonbakery79@gmail.com</li>
+                        <li><i class="fas fa-clock"></i> Open Daily: 8AM - 8PM</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Cinnamon Bakery. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const nav = document.getElementById('main-nav');
+        
+        hamburger.addEventListener('click', () => {
+            nav.classList.toggle('active');
+        });
+        
+        // Update year in footer
+        document.querySelector('.copyright p').innerHTML = 
+            `&copy; ${new Date().getFullYear()} Cinnamon Bakery. All Rights Reserved.`;
+        
+        // Order tracking functionality
+        const trackBtn = document.getElementById('track-btn');
+        const progressContainer = document.getElementById('progress-container');
+        
+        trackBtn.addEventListener('click', function() {
+            const orderId = document.getElementById('order-id').value;
+            
+            if(!orderId) {
+                alert('Please enter your order ID');
+                return;
+            }
+            
+            // Show progress container
+            progressContainer.style.display = 'block';
+            
+            // Simulate order tracking
+            setTimeout(() => {
+                alert(`Order ID: ${orderId}\nStatus: Preparing\nEstimated Delivery: Today by 3:00 PM`);
+                
+                // Animate progress bar
+                document.querySelector('.progress-bar').style.width = '66%';
+                
+                // Update step icons
+                const steps = document.querySelectorAll('.step');
+                steps[0].classList.add('completed');
+                steps[1].classList.add('active');
+                
+                // Simulate delivery progress
+                setTimeout(() => {
+                    steps[2].classList.add('active');
+                    document.querySelector('.progress-bar').style.width = '100%';
+                }, 1500);
+            }, 500);
+        });
+
+    </script>
+</body>
+</html>

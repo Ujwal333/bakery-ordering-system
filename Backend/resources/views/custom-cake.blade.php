@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinnamon Bakery - Custom Cake Designer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <style>
+        :root {
+            --primary: #D4A76A;
+            --secondary: #7B3F00;
+            --light: #FFF8F0;
+            --dark: #1E1E1E;
+            --accent: #FF9F1C;
+            --accent2: #f7c873;
+            --text: #333333;
+            --card: #f9ede5;
+            --gradient: linear-gradient(90deg, #fff8f0 0%, #ffe5d0 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--gradient);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(90deg, #fff8f0 60%, #ffe5d0 100%);
+            box-shadow: 0 2px 10px rgba(231, 176, 122, 0.13);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 16px;
+            position: relative;
+            transition: all 0.3s ease;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover,
+        nav ul li a.active {
+            background: var(--accent2);
+            color: var(--dark);
+        }
+        nav ul li a:hover:after,
+        nav ul li a.active:after {
+            width: 100%;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--card);
+            border-radius: 30px;
+            padding: 8px 15px;
+            box-shadow: 0 2px 8px rgba(231, 176, 122, 0.08);
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 180px;
+            font-size: 14px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent);
+        }
+
+        .cart-icon {
+            position: relative;
+            font-size: 20px;
+            color: var(--dark);
+            background: var(--card);
+            border-radius: 50%;
+            padding: 8px;
+            transition: background 0.2s;
+        }
+        .cart-icon:hover {
+            background: var(--accent2);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--accent);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(231, 176, 122, 0.12);
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Custom Cake Section */
+        .custom-cake-section {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .section-title p {
+            font-size: 1.2rem;
+            color: var(--dark);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cake-builder {
+            display: flex;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .cake-preview {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .cake-image {
+            width: 100%;
+            max-width: 400px;
+            height: 300px;
+            margin: 0 auto 25px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            background: #f9f5f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cake-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .preview-details {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 0 0 10px 10px;
+            text-align: left;
+        }
+
+        .preview-details h3 {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .preview-details p {
+            font-size: 0.9rem;
+            color: var(--text);
+            margin-bottom: 3px;
+        }
+
+        .size-options {
+            margin-top: 20px;
+        }
+
+        .option-group {
+            margin-bottom: 25px;
+        }
+
+        .option-group h3 {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        .custom-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            background: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .custom-select:hover {
+            border-color: var(--primary);
+        }
+
+        .custom-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(212, 167, 106, 0.3);
+        }
+
+        .customization {
+            flex: 1;
+        }
+
+        .order-summary {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-header h3 {
+            font-size: 1.4rem;
+            color: var(--secondary);
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .quantity-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .quantity-btn:hover {
+            background: var(--secondary);
+            transform: scale(1.1);
+        }
+
+        .quantity-display {
+            font-size: 1.2rem;
+            font-weight: 600;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .price-total {
+            text-align: right;
+            margin-top: 15px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .price-total .price {
+            color: var(--accent);
+            margin-left: 10px;
+        }
+
+        .add-to-cart-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(255, 159, 28, 0.3);
+        }
+
+        .add-to-cart-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+        }
+
+        .custom-message {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .custom-message h3 {
+            font-size: 1.3rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .message-input {
+            width: 100%;
+            height: 100px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            resize: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+        }
+
+        .customization-options {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .option-group h3 {
+            font-size: 1.3rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .decorations {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .decoration-option {
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .decoration-option:hover, .decoration-option.selected {
+            border-color: var(--primary);
+            background: rgba(212, 167, 106, 0.1);
+        }
+
+        .decoration-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .decoration-option i {
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .decoration-price {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(90deg, #7B3F00 60%, #e7b07a 100%);
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-col h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #e0d7d5;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            color: #e0d7d5;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .cake-builder {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+
+            nav {
+                order: 3;
+                width: 100%;
+                margin-top: 15px;
+                display: none;
+            }
+
+            nav.active {
+                display: block;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .section-title h1 {
+                font-size: 2.2rem;
+            }
+
+            .section-title p {
+                font-size: 1rem;
+            }
+
+            .decorations {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .section-title h1 {
+                font-size: 1.8rem;
+            }
+
+            .header-actions {
+                gap: 10px;
+            }
+
+            .search-bar input {
+                width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <nav id="main-nav">
+                <ul>
+                    <li><a href="{{ route('home') }}" class="{{ request()->is('/') ? 'active' : '' }}">Home</a></li>
+                    <li><a href="{{ route('browse-menu') }}" class="{{ request()->is('browse-menu') ? 'active' : '' }}">Browse Menu</a></li>
+                    <li><a href="{{ route('custom-cake') }}" id="customCakesNav" class="active">Custom Cakes</a></li>
+                    <li><a href="{{ route('order-tracking') }}">Order Tracking</a></li>
+                    <li><a href="{{ route('about') }}">About / Events</a></li>
+                    <li><a href="{{ route('features') }}">Features</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="profile" id="profile-login-link" style="cursor:pointer;">
+                    <a href="{{ route('login') }}" style="display:inline-block;"><img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="profile-img"></a>
+                </div>
+                <a href="#" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">3</span>
+                </a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Custom Cake Section -->
+    <section class="custom-cake-section">
+        <div class="container">
+            <div class="section-title">
+                <h1>CINNAMON BAKERY</h1>
+                <p>CUSTOM CAKE DESIGNER</p>
+            </div>
+
+            <div class="section-title">
+                <p>Design your perfect cake with our interactive customization tool. Choose from premium ingredients and decorations to create something truly special.</p>
+            </div>
+
+            <div class="cake-builder">
+                <div class="cake-preview">
+                    <div class="cake-image">
+                        <img id="cake-preview-img" src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=1080&q=80" alt="Custom Cake Preview">
+                        <div class="preview-details">
+                            <h3 id="preview-size">8 inch (Serves 8-10)</h3>
+                            <p id="preview-flavor">Classic Vanilla</p>
+                            <p id="preview-frosting">Classic Buttercream</p>
+                        </div>
+                    </div>
+
+                    <div class="size-options">
+                        <div class="option-group">
+                            <h3>Choose size</h3>
+                            <select class="custom-select" id="size-select">
+                                <option value="400" data-size="6 inch (Serves 4-6)">6 inch (Serves 4-6) - Rs 400</option>
+                                <option value="900" data-size="8 inch (Serves 8-10)" selected>8 inch (Serves 8-10) - Rs 900</option>
+                                <option value="1100" data-size="10 inch (Serves 12-15)">10 inch (Serves 12-15) - Rs 1100</option>
+                                <option value="1500" data-size="12 inch (Serves 20-25)">12 inch (Serves 20-25) - Rs 1500</option>
+                            </select>
+                        </div>
+
+                        <div class="option-group">
+                            <h3>Choose flavor</h3>
+                            <select class="custom-select" id="flavor-select">
+                                <option value="Classic Vanilla" data-img="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=1080&q=80">Classic Vanilla - Rs 300</option>
+                                <option value="Chocolate Fudge" data-img="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=1080&q=80">Chocolate Fudge - Rs 500</option>
+                                <option value="Red Velvet" data-img="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=1080&q=80">Red Velvet - Rs 500</option>
+                                <option value="Lemon Zest" data-img="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=1080&q=80">Lemon Zest - Rs 400</option>
+                                <option value="Carrot Cake" data-img="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=1080&q=80">Carrot Cake - Rs 600</option>
+                                <option value="Coffee Crunch" data-img="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=1080&q=80">Coffee Crunch - Rs 400</option>
+                            </select>
+                        </div>
+
+                        <div class="option-group">
+                            <h3>Choose frosting</h3>
+                            <select class="custom-select" id="frosting-select">
+                                <option value="Classic Buttercream" selected>Classic Buttercream - Rs 300</option>
+                                <option value="Cream Cheese">Cream Cheese - Rs 500</option>
+                                <option value="Chocolate Ganache">Chocolate Ganache - Rs 500</option>
+                                <option value="Premium Frosting">Premium Frosting - Rs 1000</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="customization">
+                    <div class="customization-options" style="margin-bottom: 30px;">
+                        <div class="option-group">
+                            <h3>Add decorations</h3>
+                            <div class="decorations">
+                                <div class="decoration-option" data-price="800">
+                                    <div class="decoration-name">
+                                        <i class="fas fa-stroopwafel"></i>
+                                        <span>Fresh Berries</span>
+                                    </div>
+                                    <div class="decoration-price">+Rs 800</div>
+                                </div>
+                                <div class="decoration-option" data-price="1200">
+                                    <div class="decoration-name">
+                                        <i class="fas fa-candy-cane"></i>
+                                        <span>Chocolate Drip</span>
+                                    </div>
+                                    <div class="decoration-price">+Rs 1200</div>
+                                </div>
+                                <div class="decoration-option" data-price="1800">
+                                    <div class="decoration-name">
+                                        <i class="fas fa-leaf"></i>
+                                        <span>Edible Flowers</span>
+                                    </div>
+                                    <div class="decoration-price">+Rs 1800</div>
+                                </div>
+                                <div class="decoration-option" data-price="2000">
+                                    <div class="decoration-name">
+                                        <i class="fas fa-crown"></i>
+                                        <span>Gold Leaf Accent</span>
+                                    </div>
+                                    <div class="decoration-price">+Rs 2000</div>
+                                </div>
+                                <div class="decoration-option" data-price="1000">
+                                    <div class="decoration-name">
+                                        <i class="fas fa-cookie"></i>
+                                        <span>French Macarons</span>
+                                    </div>
+                                    <div class="decoration-price">+Rs 1000</div>
+                                </div>
+                                <div class="decoration-option" data-price="1500">
+                                    <div class="decoration-name">
+                                        <i class="fas fa-star"></i>
+                                        <span>Custom Cake Topper</span>
+                                    </div>
+                                    <div class="decoration-price">+Rs 1500</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-summary">
+                        <div class="order-header">
+                            <h3>Order summary</h3>
+                            <div class="quantity-selector">
+                                <button class="quantity-btn" id="decrease">-</button>
+                                <div class="quantity-display" id="quantity">1</div>
+                                <button class="quantity-btn" id="increase">+</button>
+                            </div>
+                        </div>
+                        <div class="price-total">
+                            Total price: <span class="price" id="total-price">Rs 900</span>
+                        </div>
+                        <button class="add-to-cart-btn">Add to cart</button>
+                    </div>
+                    <div class="custom-message">
+                        <h3>Custom Message (Optional)</h3>
+                        <textarea class="message-input" placeholder="Add personal message for your cake"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Cinnamon Bakery</h3>
+                    <p>A collection of recipes and recipes from various flavors with Bringing the sweeteners of the flavor solution.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="{{ route('home') }}">Home</a></li>
+                        <li><a href="{{ route('browse-menu') }}">Browse Menu</a></li>
+                        <li><a href="{{ route('custom-cake') }}">Custom Cakes</a></li>
+                        <li><a href="{{ route('order-tracking') }}">Order Tracking</a></li>
+                        <li><a href="{{ route('about') }}">About / Events</a></li>
+                        <li><a href="{{ route('features') }}">Features</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-phone"></i> +977 9769349551</li>
+                        <li><i class="fas fa-envelope"></i> cinnamonbakery79@gmail.com</li>
+                        <li><i class="fas fa-clock"></i> Open Daily: 8AM - 8PM</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2023 Cinnamon Bakery. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const nav = document.getElementById('main-nav');
+
+        hamburger.addEventListener('click', () => {
+            nav.classList.toggle('active');
+        });
+
+        // Highlight 'Custom Cakes' as active if on custom-cake.html
+        if (window.location.pathname.endsWith('custom-cake.html')) {
+            document.querySelectorAll('#main-nav a').forEach(a => a.classList.remove('active'));
+            var customCakesLink = document.getElementById('customCakesNav');
+            if (customCakesLink) customCakesLink.classList.add('active');
+        }
+
+        // Quantity selector
+        const quantityDisplay = document.getElementById('quantity');
+        const decreaseBtn = document.getElementById('decrease');
+        const increaseBtn = document.getElementById('increase');
+        const totalPrice = document.getElementById('total-price');
+
+        let quantity = 1;
+        let basePrice = 900;
+        let decorationsPrice = 0;
+
+        function updateTotalPrice() {
+            const total = (basePrice + decorationsPrice) * quantity;
+            totalPrice.textContent = `₹${total}`;
+        }
+
+        function updateQuantity() {
+            quantityDisplay.textContent = quantity;
+            updateTotalPrice();
+        }
+
+        decreaseBtn.addEventListener('click', () => {
+            if (quantity > 1) {
+                quantity--;
+                updateQuantity();
+            }
+        });
+
+        increaseBtn.addEventListener('click', () => {
+            quantity++;
+            updateQuantity();
+        });
+
+        // Size selection
+        const sizeSelect = document.getElementById('size-select');
+        sizeSelect.addEventListener('change', () => {
+            basePrice = parseInt(sizeSelect.value);
+            const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+            document.getElementById('preview-size').textContent = selectedOption.dataset.size;
+            updateTotalPrice();
+        });
+
+        // Flavor selection
+        const flavorSelect = document.getElementById('flavor-select');
+        flavorSelect.addEventListener('change', () => {
+            const selectedOption = flavorSelect.options[flavorSelect.selectedIndex];
+            document.getElementById('preview-flavor').textContent = selectedOption.value;
+            document.getElementById('cake-preview-img').src = selectedOption.dataset.img;
+        });
+
+        // Frosting selection
+        const frostingSelect = document.getElementById('frosting-select');
+        frostingSelect.addEventListener('change', () => {
+            const selectedOption = frostingSelect.options[frostingSelect.selectedIndex];
+            document.getElementById('preview-frosting').textContent = selectedOption.value;
+        });
+
+        // Decoration selection
+        const decorationOptions = document.querySelectorAll('.decoration-option');
+        decorationOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                option.classList.toggle('selected');
+
+                decorationsPrice = 0;
+                document.querySelectorAll('.decoration-option.selected').forEach(selected => {
+                    decorationsPrice += parseInt(selected.dataset.price);
+                });
+
+                updateTotalPrice();
+            });
+        });
+
+        // Update year in footer
+        document.querySelector('.copyright p').innerHTML =
+            `&copy; ${new Date().getFullYear()} Cinnamon Bakery. All Rights Reserved.`;
+
+        // Add to Cart functionality
+        const addToCartBtn = document.querySelector('.add-to-cart-btn');
+        addToCartBtn.addEventListener('click', async () => {
+            const size = sizeSelect.options[sizeSelect.selectedIndex].text;
+            const flavor = flavorSelect.value;
+            const frosting = frostingSelect.value;
+            const message = document.querySelector('.message-input').value;
+            const selectedDecorations = Array.from(document.querySelectorAll('.decoration-option.selected')).map(dec => dec.textContent.trim());
+            const totalPrice = (basePrice + decorationsPrice) * quantity;
+
+            const customCakeData = {
+                size: size,
+                flavor: flavor,
+                frosting: frosting,
+                decorations: selectedDecorations,
+                message: message,
+                quantity: quantity,
+                total_price: totalPrice
+            };
+
+            try {
+                const response = await fetch('/api/cart/custom-cake', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify(customCakeData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showNotification('Custom cake added to cart successfully!', 'success');
+                    updateCartCount();
+                } else {
+                    showNotification(result.message || 'Failed to add custom cake to cart', 'error');
+                }
+            } catch (error) {
+                console.error('Error adding custom cake to cart:', error);
+                showNotification('An error occurred while adding to cart', 'error');
+            }
+        });
+
+        // Notification function
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 5px;
+                color: white;
+                font-weight: 500;
+                z-index: 1000;
+                animation: slideIn 0.3s ease-out;
+            `;
+
+            if (type === 'success') {
+                notification.style.backgroundColor = '#4CAF50';
+            } else {
+                notification.style.backgroundColor = '#f44336';
+            }
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Update cart count
+        async function updateCartCount() {
+            try {
+                const response = await fetch('/api/cart/count');
+                const data = await response.json();
+                const cartCount = document.querySelector('.cart-count');
+                if (cartCount) {
+                    cartCount.textContent = data.count || 0;
+                }
+            } catch (error) {
+                console.error('Error updating cart count:', error);
+            }
+        }
+
+        // Initialize cart count on page load
+        updateCartCount();
+    </script>
+</body>
+</html>

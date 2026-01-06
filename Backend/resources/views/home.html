@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinnamon Bakery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #D4A76A;
+            --secondary: #7B3F00;
+            --light: #FFF8F0;
+            --dark: #1E1E1E;
+            --accent: #FF9F1C;
+            --accent2: #f7c873;
+            --text: #333333;
+            --card: #f9ede5;
+            --gradient: linear-gradient(90deg, #fff8f0 0%, #ffe5d0 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--gradient);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(90deg, #fff8f0 60%, #ffe5d0 100%);
+            box-shadow: 0 2px 10px rgba(231, 176, 122, 0.13);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 16px;
+            position: relative;
+            transition: all 0.3s ease;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover,
+        nav ul li a.active {
+            background: var(--accent2);
+            color: var(--dark);
+        }
+        nav ul li a:hover:after,
+        nav ul li a.active:after {
+            width: 100%;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--card);
+            border-radius: 30px;
+            padding: 8px 15px;
+            box-shadow: 0 2px 8px rgba(231, 176, 122, 0.08);
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 180px;
+            font-size: 14px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent);
+        }
+
+        .cart-icon {
+            position: relative;
+            font-size: 20px;
+            color: var(--dark);
+            background: var(--card);
+            border-radius: 50%;
+            padding: 8px;
+            transition: background 0.2s;
+        }
+        .cart-icon:hover {
+            background: var(--accent2);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--accent);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(231, 176, 122, 0.12);
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), url('https://images.unsplash.com/photo-1608190003443-86b2636f1ce6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'));
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            color: var(--primary);
+            text-shadow: 0 2px 8px rgba(212, 167, 106, 0.15);
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent);
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(255, 159, 28, 0.10);
+            margin-right: 10px;
+        }
+        .btn:hover {
+            background-color: var(--secondary);
+            color: #fff;
+            transform: translateY(-3px) scale(1.04);
+            box-shadow: 0 5px 15px rgba(123, 63, 0, 0.13);
+        }
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+            margin-left: 0;
+            margin-right: 0;
+        }
+        .btn-outline:hover {
+            background-color: var(--secondary);
+            color: #fff;
+            border-color: var(--secondary);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: var(--gradient);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background-color: var(--light);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+
+        /* Popular Items */
+        .popular {
+            padding: 80px 0;
+            background: var(--light);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: var(--text);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .popular-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .popular-item {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .popular-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .popular-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .popular-content {
+            padding: 20px;
+        }
+
+        .popular-content h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--secondary);
+        }
+
+        .price {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 18px;
+        }
+
+        /* Specials Section */
+        .specials {
+            padding: 80px 0;
+            background: var(--gradient);
+        }
+
+        .specials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .special-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .special-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .special-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--accent);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .special-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .special-content {
+            padding: 20px;
+        }
+
+        .special-content h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--secondary);
+        }
+
+        .special-content p {
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 80px 0;
+            background: var(--light);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .testimonial-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .stars {
+            color: var(--accent);
+            margin-bottom: 15px;
+            text-shadow: 0 2px 8px rgba(255, 111, 97, 0.13);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .customer {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .customer-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .customer-name {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(90deg, #7B3F00 60%, #e7b07a 100%);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-col h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #e0d7d5;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            color: #e0d7d5;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 40px;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+            
+            nav {
+                order: 3;
+                width: 100%;
+                margin-top: 15px;
+                display: none;
+            }
+            
+            nav.active {
+                display: block;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+            
+            .hero {
+                height: 400px;
+            }
+            
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                height: 350px;
+            }
+            
+            .hero h1 {
+                font-size: 28px;
+            }
+            
+            .section-title h2 {
+                font-size: 28px;
+            }
+            
+            .header-actions {
+                gap: 10px;
+            }
+            
+            .search-bar input {
+                width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <nav id="main-nav">
+                <ul>
+                    <li><a href="home.html" class="active">Home</a></li>
+                    <li><a href="browse-menu.html">Browse Menu</a></li>
+                    <li><a href="custom-cake.html" id="customCakesNav">Custom Cakes</a></li>
+                    <li><a href="order-tracking.html">Order Tracking</a></li>
+                    <li><a href="about.html">About / Events</a></li>
+                    <li><a href="features.html">Features</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="profile" id="profile-login-link" style="cursor:pointer;">
+                    <a href="login.html" style="display:inline-block;"><img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="profile-img"></a>
+                </div>
+                <a href="#" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">3</span>
+                </a>
+    </header>
+
+    <!-- Main Title -->
+    <div class="container" style="margin-top: 30px; text-align: center;">
+        <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--secondary); font-weight: 700; letter-spacing: 2px; margin-bottom: 0.5em;">CINNAMON BAKERY</h1>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Artisan Bakery Crafted with Love</h1>
+            <p>Discover our handcrafted pastries, cakes, and breads made with premium ingredients</p>
+            <div>
+                <a href="#" class="btn">Order Now</a>
+                <a href="#" class="btn btn-outline">View Menu</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <a class="feature-card" href="browse-menu.html" style="text-decoration: none; color: inherit;">
+                    <div class="feature-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3>Browse Menu</h3>
+                    <p>Explore our wide selection of delicious baked goods and desserts</p>
+                </a>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <h3>Place Your Order</h3>
+                    <p>Easy online ordering with secure payment options</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3>Fast Delivery</h3>
+                    <p>Quick and reliable delivery to your doorstep</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Items -->
+    <section class="popular">
+        <div class="container">
+            <div class="section-title">
+                <h2>Popular Items</h2>
+                <p>Our customers' favorite selections</p>
+            </div>
+            
+            <div class="popular-grid">
+                <div class="popular-item">
+                    <img src="https://images.unsplash.com/photo-1571115177098-24ec42ed204d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Cakes" class="popular-img">
+                    <div class="popular-content">
+                        <h3>Cakes</h3>
+                        <div class="price">From Rs 500</div>
+                    </div>
+                </div>
+                
+                <div class="popular-item">
+                    <img src="https://images.unsplash.com/photo-1519864600265-abb23847ef2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Cupcakes" class="popular-img">
+                    <div class="popular-content">
+                        <h3>Cupcakes</h3>
+                        <div class="price">Rs 120 each</div>
+                    </div>
+                </div>
+                
+                <div class="popular-item">
+                    <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Cookies" class="popular-img">
+                    <div class="popular-content">
+                        <h3>Cookies</h3>
+                        <div class="price">Rs 80 each</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Specials Section -->
+    <section class="specials">
+        <div class="container">
+            <div class="section-title">
+                <h2>This Week's Special</h2>
+                <p>Limited time offers you don't want to miss</p>
+            </div>
+            
+            <div class="specials-grid">
+                <div class="special-card">
+                    <span class="special-tag">Limited Time</span>
+                    <img src="https://images.unsplash.com/photo-1587248722790-9a1d1b76a0e8?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Red Velvet Jar Cake" class="special-img">
+                    <div class="special-content">
+                        <h3>Red Velvet Jar Cake</h3>
+                        <p>Delicious layers of red velvet cake with cream cheese frosting</p>
+                        <div class="price">Rs 150</div>
+                    </div>
+                </div>
+                
+                <div class="special-card">
+                    <span class="special-tag">New</span>
+                    <img src="https://images.unsplash.com/photo-1550617931-e17a7b70dce2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Nutella Donuts" class="special-img">
+                    <div class="special-content">
+                        <h3>Nutella-Filled Donuts</h3>
+                        <p>Fluffy donuts filled with rich Nutella</p>
+                        <div class="price">Rs 130 each</div>
+                    </div>
+                </div>
+                
+                <div class="special-card">
+                    <span class="special-tag">Combo</span>
+                    <img src="https://images.unsplash.com/photo-1519864600265-abb23847ef2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Coffee Combo" class="special-img">
+                    <div class="special-content">
+                        <h3>Coffee + Croissant Combo</h3>
+                        <p>Perfect breakfast pairing</p>
+                        <div class="price">Rs 160</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Satisfied Customers</h2>
+                <p>What our customers say about us</p>
+            </div>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"The red velvet cake was absolutely delicious! Moist, flavorful, and the cream cheese frosting was perfect. Will definitely order again!"</p>
+                    <div class="customer">
+                        <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Priya" class="customer-img">
+                        <div>
+                            <div class="customer-name">Priya Sharma</div>
+                            <div>Regular Customer</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"The Nutella donuts are to die for! Perfectly fluffy with just the right amount of filling. My new favorite treat!"</p>
+                    <div class="customer">
+                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Rahul" class="customer-img">
+                        <div>
+                            <div class="customer-name">Rahul Patel</div>
+                            <div>First-time Customer</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="testimonial-text">"The coffee and croissant combo is my go-to breakfast now. Fresh, delicious, and great value for money."</p>
+                    <div class="customer">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Ananya" class="customer-img">
+                        <div>
+                            <div class="customer-name">Ananya Reddy</div>
+                            <div>Breakfast Lover</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Cinnamon Bakery</h3>
+                    <p>Artisan bakery crafting delicious treats since 2010. Quality ingredients, traditional methods, modern flavors.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="home.html">Home</a></li>
+                        <li><a href="browse-menu.html">Browse Menu</a></li>
+                        <li><a href="custom-cake.html">Custom Cakes</a></li>
+                        <li><a href="#">Order Tracking</a></li>
+                        <li><a href="about.html">About / Events</a></li>
+                        <li><a href="#">Features</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Sano Bharayang, Kathmandu, Nepal</li>
+                        <li><i class="fas fa-phone"></i> +977 9769349551</li>
+                        <li><i class="fas fa-envelope"></i> cinnamonbakery79@gmail.com</li>
+                        <li><i class="fas fa-clock"></i> Open Daily: 8AM - 8PM</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Cinnamon Bakery. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const nav = document.getElementById('main-nav');
+        
+        hamburger.addEventListener('click', () => {
+            nav.classList.toggle('active');
+        });
+        
+        // Update year in footer
+        document.querySelector('.copyright p').innerHTML = 
+            `&copy; ${new Date().getFullYear()} Cinnamon Bakery. All Rights Reserved.`;
+    // Highlight 'Custom Cakes' as active if on custom-cake.html
+    if (window.location.pathname.endsWith('custom-cake.html')) {
+        document.querySelectorAll('#main-nav a').forEach(a => a.classList.remove('active'));
+        var customCakesLink = document.getElementById('customCakesNav');
+        if (customCakesLink) customCakesLink.classList.add('active');
+    }
+    </script>
+</body>
+</html>
