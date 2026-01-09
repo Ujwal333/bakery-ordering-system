@@ -1,187 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cinnamon Bakery - Full Menu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@extends('layouts.app')
+
+@section('title', 'Cinnamon Bakery - Full Menu')
+
+@section('styles')
     <style>
-        :root {
-            --primary: #D4A76A;
-            --secondary: #7B3F00;
-            --light: #FFF8F0;
-            --dark: #1E1E1E;
-            --accent: #FF9F1C;
-            --accent2: #f7c873;
-            --text: #333333;
-            --card: #f9ede5;
-            --gradient: linear-gradient(90deg, #fff8f0 0%, #ffe5d0 100%);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--gradient);
-            color: var(--text);
-            line-height: 1.6;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header Styles */
-        header {
-            background: linear-gradient(90deg, #fff8f0 60%, #ffe5d0 100%);
-            box-shadow: 0 2px 10px rgba(231, 176, 122, 0.13);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-        }
-
-        .logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--secondary);
-            display: flex;
-            align-items: center;
-        }
-
-        .logo i {
-            color: var(--primary);
-            margin-right: 10px;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 25px;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: var(--secondary);
-            font-weight: 600;
-            font-size: 16px;
-            position: relative;
-            transition: all 0.3s ease;
-            padding: 4px 10px;
-            border-radius: 6px;
-        }
-
-        nav ul li a:after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background: var(--accent);
-            bottom: -5px;
-            left: 0;
-            transition: width 0.3s;
-        }
-
-        nav ul li a:hover,
-        nav ul li a.active {
-            background: var(--accent2);
-            color: var(--dark);
-        }
-        nav ul li a:hover:after,
-        nav ul li a.active:after {
-            width: 100%;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .search-bar {
-            display: flex;
-            align-items: center;
-            background: var(--card);
-            border-radius: 30px;
-            padding: 8px 15px;
-            box-shadow: 0 2px 8px rgba(231, 176, 122, 0.08);
-        }
-
-        .search-bar input {
-            border: none;
-            background: transparent;
-            outline: none;
-            width: 180px;
-            font-size: 14px;
-        }
-
-        .profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-
-        .profile-img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--accent);
-        }
-
-        .cart-icon {
-            position: relative;
-            font-size: 20px;
-            color: var(--dark);
-            background: var(--card);
-            border-radius: 50%;
-            padding: 8px;
-            transition: background 0.2s;
-        }
-        .cart-icon:hover {
-            background: var(--accent2);
-        }
-
-        .cart-count {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background-color: var(--accent);
-            color: white;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(231, 176, 122, 0.12);
-        }
-
-        .hamburger {
-            display: none;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
         /* Page Title */
         .page-title {
             text-align: center;
@@ -221,6 +43,8 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .category-btn:hover,
@@ -331,23 +155,6 @@
             flex-grow: 1;
         }
 
-        .item-details {
-            background: rgba(212, 167, 106, 0.1);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .item-details ul {
-            padding-left: 20px;
-            margin-top: 5px;
-        }
-
-        .item-details li {
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-
         .item-footer {
             display: flex;
             justify-content: space-between;
@@ -375,199 +182,15 @@
             font-weight: 600;
         }
 
-        /* Footer */
-        footer {
-            background: linear-gradient(90deg, #7B3F00 60%, #e7b07a 100%);
-            color: white;
-            padding: 60px 0 30px;
-            margin-top: 60px;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-col h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 24px;
-            margin-bottom: 20px;
-            position: relative;
-            padding-bottom: 10px;
-        }
-
-        .footer-col h3:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background-color: var(--primary);
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 10px;
-        }
-
-        .footer-links a {
-            color: #e0d7d5;
-            transition: all 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: white;
-            padding-left: 5px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .social-links a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background-color: var(--primary);
-            transform: translateY(-3px);
-        }
-
-        .copyright {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 14px;
-            color: #e0d7d5;
-        }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            .page-title h1 {
-                font-size: 36px;
-            }
-
-            nav ul {
-                gap: 15px;
-            }
-
-            .menu-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header-container {
-                flex-wrap: wrap;
-            }
-
-            nav {
-                order: 3;
-                width: 100%;
-                margin-top: 15px;
-                display: none;
-            }
-
-            nav.active {
-                display: block;
-            }
-
-            nav ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .hamburger {
-                display: block;
-            }
-
-            .categories {
-                gap: 10px;
-            }
-
-            .category-btn {
-                padding: 10px 20px;
-            }
-
-            .menu-section {
-                padding: 20px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .page-title h1 {
-                font-size: 28px;
-            }
-
-            .header-actions {
-                gap: 10px;
-            }
-
-            .search-bar input {
-                width: 120px;
-            }
-
-            .section-header h2 {
-                font-size: 26px;
-            }
+        /* Search Bar Enhancement */
+        .search-bar-container {
+            max-width: 600px;
+            margin: 0 auto 40px;
         }
     </style>
-</head>
-<body>
-    <!-- Header -->
-    <header>
-        <div class="container header-container">
-            <nav id="main-nav">
-                <ul>
-                    <li><a href="{{ route('home') }}">Home</a></li>
-                    <li><a href="{{ route('browse-menu') }}" class="{{ request()->is('browse-menu') ? 'active' : '' }}">Browse Menu</a></li>
-                    <li><a href="{{ route('custom-cake') }}">Custom Cakes</a></li>
-                    <li><a href="{{ route('order-tracking') }}">Order Tracking</a></li>
-                    <li><a href="{{ route('about') }}">About / Events</a></li>
-                    <li><a href="{{ route('features') }}">Features</a></li>
-                </ul>
-            </nav>
-            <div class="header-actions">
-                <div class="search-bar">
-                    <input type="text" placeholder="Search...">
-                    <i class="fas fa-search"></i>
-                </div>
-                <!-- Dynamic profile based on auth -->
-                <div class="profile" id="profile-login-link" style="cursor:pointer;">
-                    @auth
-                        <img src="{{ Auth::user()->profile_image }}" alt="Profile" class="profile-img">
-                        <span>{{ Auth::user()->name }}</span>
-                    @else
-                        <a href="{{ route('login') }}" style="display:inline-block;">
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="profile-img">
-                        </a>
-                    @endauth
-                </div>
-                <!-- Dynamic cart count -->
-                <a href="#" class="cart-icon">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count" id="cart-count">0</span>
-                </a>
-            </div>
-        </div>
-    </header>
+@endsection
 
+@section('content')
     <div class="container">
         <!-- Page Title -->
         <div class="page-title">
@@ -577,756 +200,49 @@
 
         <!-- Menu Categories -->
         <div class="categories">
-            <button class="category-btn active">All Items</button>
-            <button class="category-btn">Cakes</button>
-            <button class="category-btn">Cupcakes</button>
-            <button class="category-btn">Cookies</button>
-            <button class="category-btn">Pastries</button>
-            <button class="category-btn">Hot Drinks</button>
-            <button class="category-btn">Seasonal Specials</button>
-            <button class="category-btn">Rainy Day Favorites</button>
+            <a href="{{ route('browse-menu', 'all') }}" class="category-btn {{ $activeCategory == 'all' ? 'active' : '' }}">All Items</a>
+            @foreach($categories as $category)
+                <a href="{{ route('browse-menu', $category->slug) }}" class="category-btn {{ $activeCategory == $category->slug ? 'active' : '' }}">{{ $category->name }}</a>
+            @endforeach
         </div>
 
-        <!-- Cupcakes Section -->
-        <div class="menu-section">
+        <!-- Dynamic Menu Sections -->
+        @forelse($displayCategories as $category)
+        <div class="menu-section" id="category-{{ $category->slug }}">
             <div class="section-header">
-                <h2>Cupcakes</h2>
-                <p>Delicious cupcakes for every occasion</p>
+                <h2>{{ $category->name }}</h2>
+                <p>Delicious {{ strtolower($category->name) }} selection</p>
             </div>
-
+            
             <div class="menu-grid">
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1519864600265-abb23847ef2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Basic Cupcakes" class="item-img">
+                @foreach($category->products as $product)
+                <div class="menu-item" data-category="{{ $category->slug }}">
+                    @if($product->is_featured)
+                        <div class="item-tag">Popular</div>
+                    @endif
+                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="item-img">
                     <div class="item-content">
                         <div class="item-header">
-                            <h3 class="item-name">Basic Cupcakes</h3>
-                            <div class="item-price">₹120/dozen</div>
+                            <h3 class="item-name">{{ $product->name }}</h3>
+                            <div class="item-price">Rs {{ $product->price }}</div>
                         </div>
                         <div class="item-desc">
-                            <p>Simple cupcakes with colored frosting, no toppers</p>
-                            <div class="item-details">
-                                <p><strong>Includes:</strong></p>
-                                <ul>
-                                    <li>Choice of vanilla or chocolate base</li>
-                                    <li>Single color frosting</li>
-                                </ul>
-                            </div>
+                            <p>{{ Str::limit($product->description, 60) }}</p>
                         </div>
                         <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★☆</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="item-tag">Popular</div>
-                    <img src="https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Themed Cupcakes" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Themed Cupcakes</h3>
-                            <div class="item-price">₹180/dozen</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Multi-colored cupcakes with custom toppers</p>
-                            <div class="item-details">
-                                <p><strong>Includes:</strong></p>
-                                <ul>
-                                    <li>Multiple colors</li>
-                                    <li>Custom toppers available</li>
-                                    <li>Pull-apart cupcake designs</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
+                            <button class="add-to-cart" data-product-id="{{ $product->id }}">Add to Cart</button>
                             <div class="item-rating">★★★★★</div>
                         </div>
                     </div>
                 </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Number Cupcakes" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Number Cupcakes</h3>
-                            <div class="item-price">₹220/set</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Pull-apart cupcakes arranged in number shapes</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Perfect for birthdays</li>
-                                    <li>Custom designs available</li>
-                                    <li>Feeds 15-20 people</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★☆</div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
-
-        <!-- Cake Flavors Section -->
+        @empty
         <div class="menu-section">
-            <div class="section-header">
-                <h2>Cake Flavors</h2>
-                <p>Choose from our delicious cake flavors</p>
-            </div>
-
-            <div class="menu-grid">
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Vanilla Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Classic Vanilla</h3>
-                            <div class="item-price">₹500</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Light and fluffy vanilla sponge with buttercream frosting</p>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★★</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="item-tag">Best Seller</div>
-                    <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Chocolate Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Rich Chocolate</h3>
-                            <div class="item-price">₹550</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Decadent chocolate cake with chocolate ganache</p>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★★</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Red Velvet Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Red Velvet</h3>
-                            <div class="item-price">₹600</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Signature red velvet with cream cheese frosting</p>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★☆</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Additional cake flavors -->
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1621303837174-89787a7d4729?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Strawberry Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Fresh Strawberry</h3>
-                            <div class="item-price">₹550</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Light sponge with fresh strawberry filling</p>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★☆</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1606479849680-91a3d1a6e06e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Lemon Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Zesty Lemon</h3>
-                            <div class="item-price">₹520</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Tangy lemon cake with lemon glaze</p>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★★</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1542820617-0445eccf5361?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Carrot Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Carrot Walnut</h3>
-                            <div class="item-price">₹580</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Spiced carrot cake with cream cheese frosting</p>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★☆</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <p style="text-align:center;">No menu items found. Please check back later.</p>
         </div>
-
-        <!-- Cookies Section -->
-        <div class="menu-section">
-            <div class="section-header">
-                <h2>Cookies</h2>
-                <p>Delicious cookies for every taste</p>
-            </div>
-
-            <div class="menu-grid">
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Decorated Sugar Cookies" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Decorated Sugar Cookies</h3>
-                            <div class="item-price">₹300/dozen</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Thin sugar cookies with royal icing decorations</p>
-                            <div class="item-details">
-                                <p><strong>Customization:</strong></p>
-                                <ul>
-                                    <li>Available in various themes</li>
-                                    <li>Special toppers available</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★★</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="item-tag">New</div>
-                    <img src="https://images.unsplash.com/photo-1559620192-032c4bc4674e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Cake Cookies" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Cake Cookies</h3>
-                            <div class="item-price">₹350/dozen</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Any cake flavor in cookie form with choice of icing</p>
-                            <div class="item-details">
-                                <p><strong>Options:</strong></p>
-                                <ul>
-                                    <li>Choose any cake flavor</li>
-                                    <li>Select your favorite icing</li>
-                                    <li>Special toppers available</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★☆</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Chip Cookies" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Assorted Chip Cookies</h3>
-                            <div class="item-price">₹250/dozen</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Classic cookies with your choice of chips</p>
-                            <div class="item-details">
-                                <p><strong>Options:</strong></p>
-                                <ul>
-                                    <li>Chocolate chips</li>
-                                    <li>White chocolate</li>
-                                    <li>Butterscotch chips</li>
-                                    <li>M&M's</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★★</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Cookie Cakes Section -->
-        <div class="menu-section">
-            <div class="section-header">
-                <h2>Cookie Cakes</h2>
-                <p>Large cookie cakes perfect for sharing</p>
-            </div>
-
-            <div class="menu-grid">
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1618923850107-d1a234d7a73a?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="6-inch Cookie Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">6-inch Cookie Cake</h3>
-                            <div class="item-price">₹800</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Feeds 8 people</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Chocolate chip base</li>
-                                    <li>Custom decorations available</li>
-                                    <li>Feeds 8 people</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★☆</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="item-tag">Popular</div>
-                    <img src="https://images.unsplash.com/photo-1621303837174-89787a7d4729?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="8-inch Cookie Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">8-inch Cookie Cake</h3>
-                            <div class="item-price">₹700</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Feeds 8-10 people</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Choice of chocolate chip or M&M</li>
-                                    <li>Custom decorations available</li>
-                                    <li>Feeds 8-10 people</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★★</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="10-inch Cookie Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">10-inch Cookie Cake</h3>
-                            <div class="item-price">₹800</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Feeds 14-16 people</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Choice of any cookie base</li>
-                                    <li>Custom decorations available</li>
-                                    <li>Feeds 14-16 people</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★☆</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Half Sheet Cookie Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Half Sheet Cookie Cake</h3>
-                            <div class="item-price">₹1000</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Feeds 24 people</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Large cookie cake</li>
-                                    <li>Feeds 24 people</li>
-                                    <li>Perfect for office parties</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★☆</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Full Sheet Cookie Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Full Sheet Cookie Cake</h3>
-                            <div class="item-price">₹1200</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Feeds 50 people</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Our largest cookie cake</li>
-                                    <li>Feeds 50 people</li>
-                                    <li>Perfect for large gatherings</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★★</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Cakes Section -->
-        <div class="menu-section">
-            <div class="section-header">
-                <h2>Cakes</h2>
-                <p>Beautiful cakes for all occasions</p>
-            </div>
-
-            <div class="menu-grid">
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1571115177098-24ec42ed204d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="6-inch Basic Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">6-inch Basic Cake</h3>
-                            <div class="item-price">₹1200</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Simple cake without theme or special toppers</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Feeds 8-16 people</li>
-                                    <li>Choice of any flavor</li>
-                                    <li>Basic decoration</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★☆</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="item-tag">Popular</div>
-                    <img src="https://images.unsplash.com/photo-1559620192-032c4bc4674e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="6-inch Themed Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">6-inch Themed Cake</h3>
-                            <div class="item-price">₹1800</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Custom themed cake with special toppers</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Feeds 8-16 people</li>
-                                    <li>Custom theme design</li>
-                                    <li>Special toppers included</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★★</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="8-inch Basic Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">8-inch Basic Cake</h3>
-                            <div class="item-price">₹1500</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Simple cake without theme or special toppers</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Feeds 10-20 people</li>
-                                    <li>Choice of any flavor</li>
-                                    <li>Basic decoration</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★☆</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1606479849680-91a3d1a6e06e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="8-inch Themed Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">8-inch Themed Cake</h3>
-                            <div class="item-price">₹2200</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Custom themed cake with special toppers</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Feeds 10-20 people</li>
-                                    <li>Custom theme design</li>
-                                    <li>Special toppers included</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★★</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1542820617-0445eccf5361?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="10-inch Basic Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">10-inch Basic Cake</h3>
-                            <div class="item-price">₹2000</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Simple cake without theme or special toppers</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Feeds 20-30 people</li>
-                                    <li>Choice of any flavor</li>
-                                    <li>Basic decoration</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★☆</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="10-inch Themed Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">10-inch Themed Cake</h3>
-                            <div class="item-price">₹2800</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Custom themed cake with special toppers</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Feeds 20-30 people</li>
-                                    <li>Custom theme design</li>
-                                    <li>Special toppers included</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★★</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Half Sheet Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Half Sheet Cake</h3>
-                            <div class="item-price">₹2500</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Large cake for big gatherings</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Feeds 40-50 people</li>
-                                    <li>Choice of basic or themed</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★☆</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Full Sheet Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Full Sheet Cake</h3>
-                            <div class="item-price">₹3500</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Our largest cake for big events</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Feeds 70-80 people</li>
-                                    <li>Choice of basic or themed</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★☆</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Special Cakes Section -->
-        <div class="menu-section">
-            <div class="section-header">
-                <h2>Special Cakes</h2>
-                <p>Unique cakes for special occasions</p>
-            </div>
-
-            <div class="menu-grid">
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Smash Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Baby Smash Cake</h3>
-                            <div class="item-price">₹1000</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>6-inch cake perfect for baby's first birthday</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Does not include custom toppers</li>
-                                    <li>Safe for babies</li>
-                                    <li>Custom toppers available</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★★</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="item-tag">Popular</div>
-                    <img src="https://images.unsplash.com/photo-1621303837174-89787a7d4729?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="6" & 8" Stacked Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">6" & 8" Stacked Cake</h3>
-                            <div class="item-price">₹2400</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Beautiful two-tier cake</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Combine flavors</li>
-                                    <li>No floral/fondant toppers included</li>
-                                    <li>Toppers available for extra cost</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★★</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1606479849680-91a3d1a6e06e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="8" & 10" Stacked Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">8" & 10" Stacked Cake</h3>
-                            <div class="item-price">₹3200</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>Impressive two-tier cake</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Combine flavors</li>
-                                    <li>No floral/fondant toppers included</li>
-                                    <li>Toppers available for extra cost</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★☆</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1542820617-0445eccf5361?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Triple Stacked Cake" class="item-img">
-                    <div class="item-content">
-                        <div class="item-header">
-                            <h3 class="item-name">Triple Stacked Cake</h3>
-                            <div class="item-price">₹4500</div>
-                        </div>
-                        <div class="item-desc">
-                            <p>6", 8" and 10" stacked cake</p>
-                            <div class="item-details">
-                                <p><strong>Details:</strong></p>
-                                <ul>
-                                    <li>Combine flavors</li>
-                                    <li>No floral/fondant toppers included</li>
-                                    <li>Toppers available for extra cost</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item-footer">
-                            <button class="add-to-cart">Add to Cart</button>
-                            <div class="item-rating">★★★★★</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @endforelse
 
         <!-- Pickup Information -->
         <div class="menu-section" style="background: var(--accent2);">
@@ -1339,252 +255,53 @@
             </div>
         </div>
     </div>
+@endsection
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h3>Cinnamon Bakery</h3>
-                    <p>Artisan bakery crafting delicious treats since 2010. Quality ingredients, traditional methods, modern flavors.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
-                    </div>
-                </div>
-
-                <div class="footer-col">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="home.html">Home</a></li>
-                        <li><a href="browse-menu.html">Browse Menu</a></li>
-                        <li><a href="#">Custom Cakes</a></li>
-                        <li><a href="#">Order Tracking</a></li>
-                        <li><a href="about.html">About Us</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-col">
-                    <h3>Contact Us</h3>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-map-marker-alt"></i> Sano Bharayang, Kathmandu, Nepal</li>
-                        <li><i class="fas fa-phone"></i> +977 9769349551</li>
-                        <li><i class="fas fa-envelope"></i> cinnamonbakery79@gmail.com</li>
-                        <li><i class="fas fa-clock"></i> Open Daily: 8AM - 8PM</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="copyright">
-                <p>&copy; 2023 Cinnamon Bakery. All Rights Reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-        // API Configuration
-        const API_BASE = '/api';
-        let csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            updateCartCount();
-            checkAuthStatus();
-        });
-
-        // Check if user is logged in
-        async function checkAuthStatus() {
-            try {
-                const response = await fetch(`${API_BASE}/user`, {
-                    headers: { 'Accept': 'application/json' },
-                    credentials: 'include'
-                });
-
-                if (response.ok) {
-                    const user = await response.json();
-                    updateUIForLoggedInUser(user);
-                }
-            } catch (error) {
-                // User not logged in
-            }
-        }
-
-        // Update cart count in header
-        async function updateCartCount() {
-            try {
-                const response = await fetch(`${API_BASE}/cart`);
-                const data = await response.json();
-                const cartCountEl = document.getElementById('cart-count');
-                if (cartCountEl) {
-                    cartCountEl.textContent = data.item_count || 0;
-                }
-            } catch (error) {
-                console.error('Error fetching cart:', error);
-            }
-        }
-
-        // Add product to cart
-        async function addToCart(productId, productName, price, quantity = 1) {
-            try {
-                const response = await fetch(`${API_BASE}/cart/add`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    body: JSON.stringify({
-                        product_id: productId,
-                        item_name: productName,
-                        quantity: quantity,
-                        unit_price: price
-                    })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    updateCartCount();
-                    showNotification('Item added to cart!');
-                    return data;
-                } else {
-                    throw new Error(data.message || 'Failed to add to cart');
-                }
-            } catch (error) {
-                showNotification(error.message, 'error');
-                throw error;
-            }
-        }
-
-        // Helper functions
-        function showNotification(message, type = 'success') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 15px 20px;
-                background: ${type === 'success' ? '#4CAF50' : '#f44336'};
-                color: white;
-                border-radius: 5px;
-                z-index: 1000;
-                animation: slideIn 0.3s ease;
-            `;
-
-            document.body.appendChild(notification);
-
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-
-        function updateUIForLoggedInUser(user) {
-            const profileLink = document.getElementById('profile-login-link');
-            if (profileLink && user) {
-                profileLink.innerHTML = `
-                    <img src="${user.profile_image}" alt="Profile" class="profile-img">
-                    <span>${user.name}</span>
-                `;
-            }
-        }
-
-        // Update year in footer
-        document.querySelector('.copyright p').innerHTML =
-            `&copy; ${new Date().getFullYear()} Cinnamon Bakery. All Rights Reserved.`;
-
-        // Category filter buttons and menu section filtering
-        const categoryButtons = document.querySelectorAll('.category-btn');
-        const menuSections = document.querySelectorAll('.menu-section');
-
-        // Map button text to all relevant section header texts (array for each)
-        const categoryToSections = {
-            'Cakes': ['Cakes', 'Cake Flavors'],
-            'Cupcakes': ['Cupcakes'],
-            'Cookies': ['Cookies', 'Cookie Cakes'],
-            'Pastries': ['Pastries'],
-            'Hot Drinks': ['Hot Drinks'],
-            'Seasonal Specials': ['Special Cakes'],
-            'Rainy Day Favorites': ['Cookie Cakes']
-        };
-
-        let currentCategory = 'All Items';
-
-        function filterMenu() {
-            // Get search value
-            const searchInput = document.querySelector('.search-bar input');
-            const query = searchInput.value.trim().toLowerCase();
-
-            // Determine which sections to show based on category
-            let showSections;
-            if (currentCategory === 'All Items') {
-                showSections = Array.from(menuSections).map(section => {
-                    const header = section.querySelector('.section-header h2');
-                    return header ? header.textContent.trim() : '';
-                });
-            } else {
-                showSections = categoryToSections[currentCategory] || [];
-            }
-
-            menuSections.forEach(section => {
-                const header = section.querySelector('.section-header h2');
-                const sectionName = header ? header.textContent.trim() : '';
-                if (showSections.includes(sectionName)) {
-                    section.style.display = '';
-                    // Filter menu items inside this section
-                    const menuItems = section.querySelectorAll('.menu-item');
-                    let anyVisible = false;
-                    menuItems.forEach(item => {
-                        const name = item.querySelector('.item-name')?.textContent.toLowerCase() || '';
-                        const desc = item.querySelector('.item-desc')?.textContent.toLowerCase() || '';
-                        if (!query || name.includes(query) || desc.includes(query)) {
-                            item.style.display = '';
-                            anyVisible = true;
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
-                    // Hide section if no items match search
-                    section.style.display = anyVisible ? '' : 'none';
-                } else {
-                    section.style.display = 'none';
-                }
-            });
-        }
-
-        categoryButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                categoryButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                currentCategory = this.textContent.trim();
-                filterMenu();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        });
-
-        // Search bar filter
+@section('scripts')
+    <script>
+        // Search functionality
         const searchInput = document.querySelector('.search-bar input');
-        searchInput.addEventListener('input', function() {
-            filterMenu();
-        });
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim().toLowerCase();
+                const menuItems = document.querySelectorAll('.menu-item');
 
-        // Initial filter to show all
-        filterMenu();
+                menuItems.forEach(item => {
+                    const name = item.querySelector('.item-name')?.textContent.toLowerCase() || '';
+                    const desc = item.querySelector('.item-desc')?.textContent.toLowerCase() || '';
+                    if (!query || name.includes(query) || desc.includes(query)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
 
-        // Add to cart buttons - Updated to use API
-        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+                // Hide sections with no visible items
+                document.querySelectorAll('.menu-section').forEach(section => {
+                    const h2 = section.querySelector('h2');
+                    if(h2 && h2.textContent === 'Pickup Information') return;
 
-        addToCartButtons.forEach(button => {
+                    const visibleItems = Array.from(section.querySelectorAll('.menu-item')).filter(item => item.style.display !== 'none').length;
+                    section.style.display = visibleItems > 0 ? 'block' : 'none';
+                });
+            });
+        }
+
+        // Add to cart buttons listener
+        document.querySelectorAll('.add-to-cart').forEach(button => {
             button.addEventListener('click', async function() {
-                const productId = this.dataset.productId;
-                const productName = this.dataset.productName;
-                const price = parseFloat(this.dataset.price);
+                const menuItem = this.closest('.menu-item');
+                const productName = menuItem.querySelector('.item-name').textContent.trim();
+                const priceText = menuItem.querySelector('.item-price').textContent.trim();
+                const productId = this.getAttribute('data-product-id');
+                
+                let price = priceText.replace('Rs', '').replace(',', '').trim();
+                price = parseFloat(price);
 
                 try {
+                    // Call the addToCart function from layout
                     await addToCart(productId, productName, price, 1);
-                    // Animation effect
+                    
                     const originalText = this.textContent;
                     this.textContent = "✓ Added";
                     this.style.background = "#4CAF50";
@@ -1594,9 +311,9 @@
                         this.style.background = "";
                     }, 1500);
                 } catch (error) {
-                    // Error handled by addToCart function
+                    console.error('Error adding to cart:', error);
                 }
             });
         });
-</body>
-</html>
+    </script>
+@endsection

@@ -22,12 +22,14 @@ return new class extends Migration
             $table->enum('delivery_type', ['pickup', 'delivery'])->default('delivery');
             $table->dateTime('delivery_date');
             $table->time('delivery_time');
+            $table->dateTime('order_date')->nullable();
+            $table->dateTime('estimated_delivery')->nullable();
             $table->text('special_instructions')->nullable();
             $table->decimal('subtotal', 10, 2);
             $table->decimal('delivery_charge', 10, 2)->default(0);
             $table->decimal('tax', 10, 2)->default(0);
             $table->decimal('total_amount', 10, 2);
-            $table->enum('payment_method', ['cod', 'card', 'online'])->default('cod');
+            $table->enum('payment_method', ['cod', 'card', 'khalti', 'esewa'])->default('cod');
             $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
             $table->enum('status', [
                 'pending',

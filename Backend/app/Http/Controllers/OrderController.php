@@ -18,9 +18,16 @@ class OrderController extends Controller
         $request->validate([
             'customer_name' => 'required|string|max:255',
             'customer_email' => 'required|email|max:255',
-            'customer_phone' => 'required|string|max:20',
+            'customer_phone' => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:20',
             'delivery_address' => 'required|string',
+            'delivery_city' => 'nullable|string',
+            'delivery_state' => 'nullable|string',
+            'delivery_zip' => 'nullable|string',
+            'delivery_type' => 'nullable|in:pickup,delivery',
+            'delivery_date' => 'required|date|after_today',
+            'delivery_time' => 'required|in:morning,afternoon,evening',
             'special_instructions' => 'nullable|string',
+            'payment_method' => 'required|in:cod,card,khalti,esewa',
         ]);
 
         DB::beginTransaction();
@@ -33,6 +40,15 @@ class OrderController extends Controller
                 return response()->json(['message' => 'Cart is empty'], 400);
             }
 
+            // Calculate delivery charge (Rs 10 for COD)
+            $deliveryCharge = ($request->payment_method === 'cod') ? 10 : 0;
+
+            // Calculate total amount
+            $totalAmount = $cart->subtotal + $cart->tax + $cart->delivery + $deliveryCharge;
+
+            // Parse delivery date and time
+            $deliveryDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i', $request->delivery_date . ' ' . $this->parseTimeSlot($request->delivery_time));
+
             // Create order
             $order = Order::create([
                 'user_id' => auth()->id(),
@@ -40,11 +56,21 @@ class OrderController extends Controller
                 'customer_email' => $request->customer_email,
                 'customer_phone' => $request->customer_phone,
                 'delivery_address' => $request->delivery_address,
+                'delivery_city' => $request->delivery_city,
+                'delivery_state' => $request->delivery_state,
+                'delivery_zip' => $request->delivery_zip,
+                'delivery_type' => $request->delivery_type ?? 'delivery',
+                'delivery_date' => $deliveryDateTime->toDateString(),
+                'delivery_time' => $deliveryDateTime->toTimeString(),
                 'special_instructions' => $request->special_instructions,
-                'total_amount' => $cart->subtotal,
-                'status' => 'confirmed',
+                'subtotal' => $cart->subtotal,
+                'delivery_charge' => $deliveryCharge,
+                'tax' => $cart->tax ?? 0,
+                'total_amount' => $totalAmount,
+                'payment_method' => $request->payment_method,
+                'status' => 'pending',
                 'order_date' => now(),
-                'estimated_delivery' => now()->addDays(1)->setTime(15, 0), // Tomorrow 3 PM
+                'estimated_delivery' => $deliveryDateTime,
             ]);
 
             // Create order items from cart items
@@ -68,7 +94,7 @@ class OrderController extends Controller
             return response()->json([
                 'message' => 'Order placed successfully',
                 'order' => $order,
-                'order_id' => $order->order_id,
+                'order_number' => $order->order_number,
             ], 201);
 
         } catch (\Exception $e) {
@@ -84,7 +110,7 @@ class OrderController extends Controller
             'order_id' => 'required|string',
         ]);
 
-        $order = Order::where('order_id', $request->order_id)->first();
+        $order = Order::where('order_number', $request->order_id)->first();
 
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
@@ -174,5 +200,20 @@ class OrderController extends Controller
             'message' => 'Order status updated',
             'order' => $order,
         ]);
+    }
+
+    // Helper method to parse time slot
+    private function parseTimeSlot($timeSlot)
+    {
+        switch ($timeSlot) {
+            case 'morning':
+                return '09:00';
+            case 'afternoon':
+                return '12:00';
+            case 'evening':
+                return '15:00';
+            default:
+                return '12:00'; // Default to noon
+        }
     }
 }

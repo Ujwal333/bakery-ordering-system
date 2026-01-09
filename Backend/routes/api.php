@@ -10,8 +10,10 @@ use App\Http\Controllers\CustomCakeController;
 use App\Http\Controllers\HomeController;
 
 // Public routes
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
+Route::post('/send-otp', [AuthController::class, 'sendOtp'])->middleware('throttle:5,1');
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->middleware('throttle:5,1');
 
 // Products
 Route::get('/products', [ProductController::class, 'index']);
@@ -29,13 +31,14 @@ Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{slug}', [CategoryController::class, 'show']);
 
 // Cart (available without auth for guests)
+// Cart (available without auth for guests)
 Route::get('/cart', [CartController::class, 'index']);
-Route::get('/cart/count', [CartController::class, 'count']);
+Route::get('/cart/count', [CartController::class, 'getCount']);
 Route::post('/cart/add', [CartController::class, 'addItem']);
 Route::post('/cart/custom-cake', [CartController::class, 'addCustomCake']);
 Route::put('/cart/item/{id}', [CartController::class, 'updateItem']);
 Route::delete('/cart/item/{id}', [CartController::class, 'removeItem']);
-Route::delete('/cart/clear', [CartController::class, 'clear']);
+Route::delete('/cart/clear', [CartController::class, 'clearCart']);
 
 // Order tracking (public)
 Route::post('/orders/track', [OrderController::class, 'track']);

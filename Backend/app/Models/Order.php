@@ -22,6 +22,8 @@ class Order extends Model
         'delivery_type',
         'delivery_date',
         'delivery_time',
+        'order_date',
+        'estimated_delivery',
         'special_instructions',
         'subtotal',
         'delivery_charge',
@@ -121,8 +123,12 @@ class Order extends Model
     {
         $this->status = $status;
 
-        if ($status === 'delivered') {
-            $this->delivered_at = now();
+        $timestampField = $status . '_at';
+        // Handle out_for_delivery field name mismatch if any, but migration has out_for_delivery_at
+        if ($status === 'out_for_delivery') {
+            $this->out_for_delivery_at = now();
+        } elseif (in_array($timestampField, ['confirmed_at', 'preparing_at', 'ready_at', 'delivered_at', 'cancelled_at'])) {
+            $this->$timestampField = now();
         }
 
         $this->save();
@@ -139,12 +145,15 @@ class Order extends Model
     private function getStatusMessage($status)
     {
         $messages = [
+            'pending' => 'Your order has been placed and is awaiting confirmation.',
             'confirmed' => 'Your order has been confirmed and is being prepared.',
             'preparing' => 'Your order is being prepared with care.',
+            'ready' => 'Your order is ready for pickup/delivery.',
             'out_for_delivery' => 'Your order is out for delivery.',
             'delivered' => 'Your order has been delivered successfully.',
+            'cancelled' => 'Your order has been cancelled.',
         ];
 
-        return $messages[$status] ?? 'Order status updated.';
+        return $messages[$status] ?? 'Order status updated to ' . ucfirst(str_replace('_', ' ', $status));
     }
 }

@@ -19,7 +19,7 @@ class CartController extends Controller
         return response()->json([
             'cart' => $cart,
             'subtotal' => $cart->subtotal,
-            'total_items' => $cart->total_items,
+            'item_count' => $cart->total_items,
         ]);
     }
 
@@ -38,12 +38,41 @@ class CartController extends Controller
 
         try {
             $cart = Cart::getOrCreateCart();
+            $productId = $request->product_id;
+            $itemName = $request->item_name;
+            $unitPrice = $request->unit_price;
+            $customizations = $request->customizations;
+
+            // If product_id is provided, try to get details from DB to ensure accuracy
+            if ($productId) {
+                $product = Product::find($productId);
+                if ($product) {
+                    $itemName = $product->name;
+                    $unitPrice = $product->price;
+                } else {
+                    // If product_id is provided but product not found, return error
+                    DB::rollback();
+                    return response()->json(['message' => 'Product not found.'], 404);
+                }
+            }
 
             // Check if similar item exists in cart
-            $existingItem = $cart->items()
-                ->where('item_name', $request->item_name)
-                ->where('customizations', json_encode($request->customizations))
-                ->first();
+            // For simple products (no customizations), we just check product_id or item_name
+            $query = $cart->items();
+            if ($productId) {
+                $query->where('product_id', $productId);
+            } else {
+                $query->where('item_name', $itemName);
+            }
+
+            // Filter by customizations if provided
+            if ($customizations) {
+                $query->where('customizations', json_encode($customizations));
+            } else {
+                $query->whereNull('customizations');
+            }
+
+            $existingItem = $query->first();
 
             if ($existingItem) {
                 // Update quantity if item already exists
@@ -54,12 +83,12 @@ class CartController extends Controller
                 // Create new cart item
                 CartItem::create([
                     'cart_id' => $cart->id,
-                    'product_id' => $request->product_id,
-                    'item_name' => $request->item_name,
-                    'customizations' => $request->customizations,
+                    'product_id' => $productId,
+                    'item_name' => $itemName,
+                    'customizations' => $customizations,
                     'quantity' => $request->quantity,
-                    'unit_price' => $request->unit_price,
-                    'total_price' => $request->quantity * $request->unit_price,
+                    'unit_price' => $unitPrice,
+                    'total_price' => $request->quantity * $unitPrice,
                 ]);
             }
 
@@ -69,10 +98,11 @@ class CartController extends Controller
             $cart->load('items.product');
 
             return response()->json([
+                'success' => true,
                 'message' => 'Item added to cart',
                 'cart' => $cart,
                 'subtotal' => $cart->subtotal,
-                'total_items' => $cart->total_items,
+                'item_count' => $cart->total_items, // Use consistent naming
             ]);
 
         } catch (\Exception $e) {
@@ -99,7 +129,7 @@ class CartController extends Controller
             'message' => 'Cart updated',
             'cart' => $cart,
             'total' => $cart->total,
-            'item_count' => $cart->item_count,
+            'item_count' => $cart->total_items,
         ]);
     }
 
@@ -117,7 +147,7 @@ class CartController extends Controller
             'message' => 'Item removed from cart',
             'cart' => $cart,
             'subtotal' => $cart->subtotal,
-            'total_items' => $cart->total_items,
+            'item_count' => $cart->total_items,
         ]);
     }
 
@@ -131,7 +161,7 @@ class CartController extends Controller
             'message' => 'Cart cleared',
             'cart' => $cart,
             'subtotal' => 0,
-            'total_items' => 0,
+            'item_count' => 0,
         ]);
     }
 
@@ -192,7 +222,7 @@ class CartController extends Controller
         $cart = Cart::getOrCreateCart();
 
         return response()->json([
-            'count' => $cart->total_items,
+            'item_count' => $cart->total_items,
         ]);
     }
 }

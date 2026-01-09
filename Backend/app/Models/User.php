@@ -19,6 +19,9 @@ class User extends Authenticatable
         'address',
         'profile_image',
         'role',
+        'otp_code',
+        'otp_expires_at',
+        'is_phone_verified',
     ];
 
     protected $hidden = [

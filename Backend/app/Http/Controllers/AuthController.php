@@ -163,4 +163,88 @@ class AuthController extends Controller
             'message' => 'Password changed successfully'
         ]);
     }
+    // Send OTP to user
+    public function sendOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|exists:users,email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User with this email not found'
+            ], 422);
+        }
+
+        $user = User::where('email', $request->email)->first();
+        
+        // Generate 6-digit OTP
+        $otp = rand(100000, 999999);
+        
+        $user->otp_code = $otp;
+        $user->otp_expires_at = now()->addMinutes(10);
+        $user->save();
+
+        // In a real app, send email/SMS. For testing, we log it.
+        \Log::info("OTP for {$user->email}: {$otp}");
+        
+        // Return OTP in response for testing purposes only when debug is on
+        $responseData = [
+            'success' => true,
+            'message' => 'OTP sent successfully',
+        ];
+
+        if (config('app.debug')) {
+            $responseData['debug_otp'] = $otp;
+        }
+
+        return response()->json($responseData);
+    }
+
+    // Verify OTP and login
+    public function verifyOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email',
+            'otp' => 'required|string|size:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user = User::where('email', $request->email)
+            ->where('otp_code', $request->otp)
+            ->where('otp_expires_at', '>', now())
+            ->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid or expired OTP'
+            ], 401);
+        }
+
+        // Clear OTP
+        $user->otp_code = null;
+        $user->otp_expires_at = null;
+        $user->is_phone_verified = true;
+        $user->save();
+
+        // Login user
+        Auth::login($user);
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Login successful',
+            'user' => $user,
+            'token' => $token,
+            'redirect' => '/'
+        ]);
+    }
 }

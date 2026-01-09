@@ -11,29 +11,32 @@ class CustomCake extends Model
 
     protected $fillable = [
         'user_id',
+        'reference_number',
         'cake_name',
         'size',
+        'size_price',
         'flavor',
+        'flavor_price',
         'frosting',
-        'filling',
-        'design_details',
-        'special_instructions',
-        'serves',
-        'base_price',
-        'customization_price',
+        'frosting_price',
+        'decorations',
+        'decorations_price',
+        'custom_message',
+        'image_path',
         'total_price',
         'status',
-        'estimated_completion',
-        'completed_at',
-        'image_url',
+        'delivery_date',
+        'delivery_time',
     ];
 
     protected $casts = [
-        'base_price' => 'decimal:2',
-        'customization_price' => 'decimal:2',
+        'size_price' => 'decimal:2',
+        'flavor_price' => 'decimal:2',
+        'frosting_price' => 'decimal:2',
+        'decorations_price' => 'decimal:2',
         'total_price' => 'decimal:2',
-        'estimated_completion' => 'datetime',
-        'completed_at' => 'datetime',
+        'delivery_date' => 'date',
+        'decorations' => 'array',
     ];
 
     // Relationships
